@@ -24,10 +24,28 @@ router.get("/login", function (req, res, next) {
 
 // login
 router.post("/login", function (req, res, next) {
-// the login information goes here
+  // the login information goes here
+
+  if (req.body.email && req.body.password) {
+    User.authenticate(req.body.email, req.body.password, function(error, user){
+      if (error ||!user){
+        let err = new Error("Invalid credentials")
+        err.status = 401
+        return next(err)
+      }else{
+        req.session.userId = user._id
+        return res.redirect("/profile")
+      }
+    })
+
+
+  } else {
+    let err = new Error("Email and password are required ");
+    //  bad requrest
+    err.status = 401;
+    return next(err);
+  }
 });
-
-
 
 // register
 router.get("/register", function (req, res, next) {
@@ -43,30 +61,27 @@ router.post("/register", function (req, res, next) {
       //  bad requrest
       err.status = 400;
       return next(err);
-    }else{
-
-      console.log(req.body.password)
+    } else {
+      console.log(req.body.password);
       let userData = {
         email: req.body.email,
-        name : req.body.name,
+        name: req.body.name,
         password: req.body.password,
-        favoriteBook: req.body.favoriteBook
-      }
-      User.create(userData, (err, user)=>{
-        if (err){
-          return next(err)
-        }else{
-          return res.redirect('/profile')
+        favoriteBook: req.body.favoriteBook,
+      };
+      User.create(userData, (err, user) => {
+        if (err) {
+          return next(err);
+        } else {
+          req.session.userId = user._id
+          return res.redirect("/profile");
         }
-      })
-
-
+      });
     }
-
   } else {
     let err = new Error("All Fields Required");
     //  bad requrest
-    err.status= 400;
+    err.status = 400;
     return next(err);
   }
 });
