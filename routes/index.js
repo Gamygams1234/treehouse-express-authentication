@@ -2,6 +2,9 @@ var express = require("express");
 var router = express.Router();
 var User = require("../models/User");
 
+var mid = require("../middleware")
+
+
 // GET /
 router.get("/", function (req, res, next) {
   return res.render("index", { title: "Home" });
@@ -17,9 +20,9 @@ router.get("/contact", function (req, res, next) {
   return res.render("contact", { title: "Contact" });
 });
 
-// login
-router.get("/login", function (req, res, next) {
-  return res.render("login", { title: "Login" });
+// GET /login
+router.get('/login', mid.loggedOut, function(req, res, next) {
+  return res.render('login', { title: 'Log In'});
 });
 
 // login
@@ -48,7 +51,7 @@ router.post("/login", function (req, res, next) {
 });
 
 // register
-router.get("/register", function (req, res, next) {
+router.get("/register",mid.loggedOut, function (req, res, next) {
   return res.render("register", { title: "Register" });
 });
 
