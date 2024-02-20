@@ -1,11 +1,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 let mongoose = require("mongoose")
+// for express session
+let session = require("express-session")
 var app = express();
-var User = require('./models/User')
+
 
 
 // mongoose connecton 
+
+app.use(session({secret:"Gamy Loves you", resave: true, saveUninitialized: false}))
+
 
 mongoose.connect("mongodb://localhost:27017/bookworm");
 let db = mongoose.connection;
