@@ -11,6 +11,13 @@ var app = express();
 
 app.use(session({secret:"Gamy Loves you", resave: true, saveUninitialized: false}))
 
+// letting user ID available to the templates
+
+app.use(function(req, res, next){
+  res.locals.currentUser = req.session.userId;
+  next()
+})
+
 
 mongoose.connect("mongodb://localhost:27017/bookworm");
 let db = mongoose.connection;
@@ -20,6 +27,7 @@ db.on('error', console.error.bind(console, 'connection error:'))
 // parse incoming requests
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 
 // serve static files from /public
 app.use(express.static(__dirname + '/public'));
