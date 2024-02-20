@@ -33,15 +33,13 @@ router.post("/register", function (req, res, next) {
       return next(err);
     }else{
 
+      console.log(req.body.password)
       let userData = {
         email: req.body.email,
         name : req.body.name,
         password: req.body.password,
         favoriteBook: req.body.favoriteBook
       }
-
-
-
       User.create(userData, (err, user)=>{
         if (err){
           return next(err)
